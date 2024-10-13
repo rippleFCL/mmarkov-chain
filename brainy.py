@@ -23,7 +23,6 @@ class Probby(object):
 class MEGABRAIN(object):
     def __init__(self, max_depth=3, coheasion=2):
         self.token_map = defaultdict(Probby)
-        self.revesed_token_map = defaultdict(Probby)
         self.max_depth = max_depth
         self.coheasion = coheasion
 
@@ -35,13 +34,17 @@ class MEGABRAIN(object):
             token_id = " ".join((sentance + new_sentance)[-self.max_depth :])
             coheasion = self.coheasion
             while True:
+                coheasion -= 1
                 next_word, probability = self.token_map[token_id].get_next_word()
-                if not new_sentance and not (next_word != "." and next_word != "!" and next_word != "?" and next_word != ","):
+                if (
+                    not new_sentance
+                    and not (next_word != "." and next_word != "!" and next_word != "?" and next_word != ",")
+                    and coheasion
+                ):
                     continue
                 if probability > 1 :
                     new_sentance.append(next_word)
                     break
-                coheasion -= 1
                 if not coheasion:
                     continue
                 token_id = " ".join(token_id.split(" ")[1:])
@@ -81,7 +84,7 @@ bigboi = MEGABRAIN(5)
 def load_dataset(model: MEGABRAIN, filename: str, processor):
     with open(filename) as f:
         data = []
-        lines = f.readlines()[:280000]
+        lines = f.readlines()[:300000]
         for line in lines:
             line_processed = processor(line)
             if line_processed:
@@ -106,10 +109,10 @@ def strip_bee(string):
     return replace_punc(string.replace("- ", ""))
 
 
-# load_dataset(bigboi, "trainin_data.txt", strip_human)
+load_dataset(bigboi, "trainin_data.txt", strip_human)
 load_dataset(bigboi, "beemove.txt", strip_bee)
-# load_dataset(bigboi, "squished.txt", replace_punc)
-# load_dataset(bigboi, "en.txt", replace_punc)
+load_dataset(bigboi, "squished.txt", replace_punc)
+load_dataset(bigboi, "en.txt", replace_punc)
 
 
 # load_dataset(bigboi, "beemove.txt", strip_bee)
