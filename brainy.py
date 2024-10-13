@@ -21,45 +21,45 @@ class Probby(object):
 
 
 class MEGABRAIN(object):
-    def __init__(self, max_depth=3, coheasion=2):
+    def __init__(self, max_depth=3, cohesion=2):
         self.token_map = defaultdict(Probby)
         self.max_depth = max_depth
-        self.coheasion = coheasion
+        self.cohesion = cohesion
 
     def cook(self, hi):
         hi = hi.replace("?", " ?").replace("!", " !").replace(".", " .").replace(",", " ,")
-        sentance = hi.split()
-        new_sentance = []
+        sentence = hi.split()
+        new_sentence = []
         while True:
-            token_id = " ".join((sentance + new_sentance)[-self.max_depth :])
-            coheasion = self.coheasion
+            token_id = " ".join((sentence + new_sentence)[-self.max_depth :])
+            cohesion = self.cohesion
             while True:
-                coheasion -= 1
+                cohesion -= 1
                 next_word, probability = self.token_map[token_id].get_next_word()
                 if (
-                    not new_sentance
+                    not new_sentence
                     and not (next_word != "." and next_word != "!" and next_word != "?" and next_word != ",")
-                    and coheasion
+                    and cohesion
                 ):
                     continue
                 if probability > 1 :
-                    new_sentance.append(next_word)
+                    new_sentence.append(next_word)
                     break
-                if not coheasion:
+                if not cohesion:
                     continue
                 token_id = " ".join(token_id.split(" ")[1:])
-            if new_sentance[-1].endswith(".") or new_sentance[-1].endswith("!") or new_sentance[-1].endswith("?"):
+            if new_sentence[-1].endswith(".") or new_sentence[-1].endswith("!") or new_sentence[-1].endswith("?"):
                 break
-        start = " ".join(sentance)
+        start = " ".join(sentence)
         if not (start.endswith(".") or start.endswith("!") or start.endswith("?")):
-            new_sentance =sentance + new_sentance
+            new_sentence =sentence + new_sentence
 
-        output = " ".join(new_sentance)
+        output = " ".join(new_sentence)
         output = output.replace(" ?", "?").replace(" !", "!").replace(" .", ".").replace(" ,", ",")
         return output
 
-    def hear(self, speach, output=False):
-        words = speach.split()
+    def hear(self, speech, output=False):
+        words = speech.split()
         count = 0
         for word_pos in range(len(words)):
             count += 1
