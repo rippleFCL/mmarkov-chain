@@ -21,19 +21,19 @@ class Probby(object):
 
 
 class MEGABRAIN(object):
-    def __init__(self, max_depth=3, uwu):
+    def __init__(self, max_depth=3, coheasion=2):
         self.token_map = defaultdict(Probby)
         self.revesed_token_map = defaultdict(Probby)
         self.max_depth = max_depth
+        self.coheasion = coheasion
 
     def cook(self, hi):
         hi = hi.replace("?", " ?").replace("!", " !").replace(".", " .").replace(",", " ,")
         sentance = hi.split()
-        sentance_length = len(sentance)
         new_sentance = []
         while True:
             token_id = " ".join((sentance + new_sentance)[-self.max_depth :])
-            cuddle = 10
+            coheasion = self.coheasion
             while True:
                 next_word, probability = self.token_map[token_id].get_next_word()
                 if not new_sentance and not (next_word != "." and next_word != "!" and next_word != "?" and next_word != ","):
@@ -41,8 +41,8 @@ class MEGABRAIN(object):
                 if probability > 1 :
                     new_sentance.append(next_word)
                     break
-                cuddle -= 1
-                if not cuddle:
+                coheasion -= 1
+                if not coheasion:
                     continue
                 token_id = " ".join(token_id.split(" ")[1:])
             if new_sentance[-1].endswith(".") or new_sentance[-1].endswith("!") or new_sentance[-1].endswith("?"):
