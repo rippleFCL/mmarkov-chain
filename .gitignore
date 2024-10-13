@@ -1,0 +1,4 @@
+*.txt
+dialogs/*
+*.tar
+squisher.py
